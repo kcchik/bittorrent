@@ -2,8 +2,8 @@ package bencode
 
 import (
 	"fmt"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 func Decode(input string) (interface{}, error) {
@@ -31,9 +31,8 @@ func decodeNext(input string) (interface{}, int, error) {
 	default:
 		if input[0] >= '0' && input[0] <= '9' {
 			return decodeString(input)
-		} else {
-			return nil, 0, fmt.Errorf("invalid character %c in input", input[0])
 		}
+		return nil, 0, fmt.Errorf("invalid character %c in input", input[0])
 	}
 }
 
@@ -55,7 +54,7 @@ func decodeInt(input string) (int, int, error) {
 	if numEnd < 1 {
 		return 0, 0, fmt.Errorf("invalid integer format")
 	}
-	numStr := input[1 : numEnd]
+	numStr := input[1:numEnd]
 	num, err := strconv.Atoi(numStr)
 	if err != nil {
 		return 0, 0, fmt.Errorf("invalid integer value: %v", err)
@@ -85,16 +84,16 @@ func decodeDict(input string) (map[string]interface{}, int, error) {
 		if input[i] == 'e' {
 			return result, i + 1, nil
 		}
-		key, length, err := decodeString(input[i:])
+		key, keyLength, err := decodeString(input[i:])
 		if err != nil {
 			return nil, 0, err
 		}
-		i += length
-		value, length, err := decodeNext(input[i:])
+		i += keyLength
+		value, valueLength, err := decodeNext(input[i:])
 		if err != nil {
 			return nil, 0, err
 		}
-		i += length
+		i += valueLength
 		result[key] = value
 	}
 	return nil, 0, fmt.Errorf("missing end marker for dictionary")

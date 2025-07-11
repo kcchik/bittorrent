@@ -2,22 +2,23 @@ package bencode
 
 import (
 	"fmt"
-	"strconv"
 	"sort"
+	"strconv"
 )
 
 func Encode(input interface{}) (string, error) {
-	switch i := input.(type) {
+	switch value := input.(type) {
 	case string:
-		return encodeString(i)
+		return encodeString(value)
 	case int:
-		return encodeInt(i)
+		return encodeInt(value)
 	case []interface{}:
-		return encodeList(i)
+		return encodeList(value)
 	case map[string]interface{}:
-		return encodeDict(i)
+		return encodeDict(value)
+	default:
+		return "", fmt.Errorf("unsupported type: %T", input)
 	}
-	return "", fmt.Errorf("unsupported type: %T", input)
 }
 
 func encodeString(input string) (string, error) {
@@ -59,6 +60,5 @@ func encodeDict(input map[string]interface{}) (string, error) {
 		}
 		result += encodedValue
 	}
-	result += "e"
-	return result, nil
+	return result + "e", nil
 }

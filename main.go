@@ -1,18 +1,28 @@
 package main
 
-import "fmt"
-
-import "bittorrent/bencode"
+import (
+	"fmt"
+	"bittorrent/metainfo"
+)
 
 func main() {
-	// fmt.Println(bencode.Encode("spam"))
-	// fmt.Println(bencode.Encode(42))
-	// fmt.Println(bencode.Encode([]interface{}{"foo", 42, "bar"}))
-	fmt.Println(bencode.Encode(map[string]interface{}{"key1": "value1", "key2": 2}))
+	meta, err := metainfo.DecodeMetainfo("./testdata/Welcome to the NHK.torrent")
+	if err != nil {
+		fmt.Errorf("Error decoding metainfo:", err)
+		return
+	}
+	fmt.Printf("Announce: %s\n", meta.Announce)
+	fmt.Printf("Info Name: %s\n", meta.Info.Name)
+	fmt.Printf("Info Piece Length: %d\n", meta.Info.PieceLength)
+	fmt.Printf("Info Length: %d\n", meta.Info.Length)
+	for i, file := range meta.Info.Files {
+		fmt.Printf("File %d: Path: %s, Length: %d\n", i+1, file.Path, file.Length)
+	}
 
-	// fmt.Println(bencode.Decode("4:spam"))
-	// fmt.Println(bencode.Decode("i42e"))
-	// fmt.Println(bencode.Decode("l4:spami42e4:eggse"))
-	// fmt.Println(bencode.Decode("le"))
-	// fmt.Println(bencode.Decode("d4:eggs5:toast4:spami42ee"))
+	info, err := metainfo.EncodeInfo(meta.Info)
+	if err != nil {
+		fmt.Errorf("Error encoding info:", err)
+		return
+	}
+	fmt.Println(info)
 }

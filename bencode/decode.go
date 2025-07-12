@@ -79,7 +79,7 @@ func decodeList(input string) ([]interface{}, int, error) {
 }
 
 func decodeDict(input string) (map[string]interface{}, int, error) {
-	result := make(map[string]interface{})
+	result := map[string]interface{}{}
 	for i := 1; i < len(input); {
 		if input[i] == 'e' {
 			return result, i + 1, nil

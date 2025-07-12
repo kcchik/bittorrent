@@ -43,7 +43,7 @@ func encodeList(input []interface{}) (string, error) {
 
 func encodeDict(input map[string]interface{}) (string, error) {
 	result := "d"
-	keys := make([]string, 0, len(input))
+	keys := []string{}
 	for key := range input {
 		keys = append(keys, key)
 	}
